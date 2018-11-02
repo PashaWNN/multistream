@@ -1,11 +1,15 @@
 from multicast import MulticastServer
-import cv2
+from imaging import Camera, Screen
 
 srv = MulticastServer()
+sources = [Camera, Screen]
+for i, source in enumerate(sources):
+    print('%i) %s' % (i+1, source.__name__))
 
-camera = cv2.VideoCapture(0)
+src = int(input('Select source: '))
+
+source = sources[src-1]()
 
 while True:
-    _, frame = camera.read()
-    _, buf = cv2.imencode('.jpg', frame)
+    buf = source.read()
     srv.send_bytes(buf)
