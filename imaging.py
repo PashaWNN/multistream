@@ -33,7 +33,7 @@ class Screen(ImageSource):
         with self.mss as sct:
             img = sct.grab(sct.monitors[0])
         nparray = np.array(img.pixels)
-        _, buf = cv2.imencode('.png', nparray,""" (cv2.IMWRITE_JPEG_QUALITY, 50)""")
+        _, buf = cv2.imencode('.jpg', nparray, (cv2.IMWRITE_JPEG_QUALITY, 50))
         return buf
 
 
