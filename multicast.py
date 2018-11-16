@@ -27,14 +27,14 @@ class MulticastClient:
     SERVER_IP = "224.1.1.%i"
     SERVER_PORT = 9090
     SOCKET_TIMEOUT = 10
-    PACKET_SIZE = 4096
+    PACKET_SIZE = 8192
 
     def __init__(self, mcast_group: int = 1):
         self.group = mcast_group
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.settimeout(self.SOCKET_TIMEOUT)
-        self.sock.bind((self.SERVER_IP % self.group, self.SERVER_PORT))
+        self.sock.bind(('', self.SERVER_PORT))
         mreq = struct.pack('4sl', socket.inet_aton(self.SERVER_IP % self.group), socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
         self.buffer = b''
@@ -51,11 +51,8 @@ class MulticastClient:
         return size
 
     def read(self):
-        while True:
-            self.buffer = b''
-            size = self._wait_sizedef()
-            for i in range(size):
-                self.buffer += self.sock.recv(self.PACKET_SIZE)
-            yield self.buffer
+        size = self._wait_sizedef()
+        for i in range(size):
+            yield self.sock.recv(self.PACKET_SIZE)
 
 

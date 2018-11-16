@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import ImageGrab as ig
 from mss import mss
 from abc import ABC, abstractmethod
 
@@ -12,22 +12,32 @@ class ImageSource(ABC):
 
 
 class Camera(ImageSource):
+    """Web-cam using CV2"""
     def __init__(self):
         self.cam = cv2.VideoCapture(0)
 
     def read(self):
         _, frame = self.cam.read()
-        _, buf = cv2.imencode('.jpg', frame)
+        _, buf = cv2.imencode('.jpg', frame, (cv2.IMWRITE_JPEG_QUALITY, 90))
         return buf
 
 
 class Screen(ImageSource):
+    """Screen using MSS"""
     def __init__(self):
         self.mss = mss()
 
     def read(self):
         with self.mss as sct:
             img = sct.grab(sct.monitors[0])
-        nparray = np.array(img)
-        _, buf = cv2.imencode('.jpg', nparray)
+        nparray = np.array(img.pixels)
+        _, buf = cv2.imencode('.png', nparray,""" (cv2.IMWRITE_JPEG_QUALITY, 50)""")
         return buf
+
+
+class NewScreen(ImageSource):
+    """Screen using ImageGrab(Win & Mac only)"""
+    def read(self):
+        screen = ig.grab()
+        nparray = np.array(screen)
+        _, buf = cv2.imencode('.jpg', nparray, (cv2.IMWRITE_JPEG_QUALITY, 50))
