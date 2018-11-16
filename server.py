@@ -1,10 +1,11 @@
 from multicast import MulticastServer
-from imaging import Camera, Screen
+from imaging import Camera, Screen, NewScreen
 
 srv = MulticastServer()
-sources = [Camera, Screen]
+
+sources = [Camera, Screen, NewScreen]
 for i, source in enumerate(sources):
-    print('%i) %s' % (i+1, source.__name__))
+    print('%i) %s (%s)' % (i+1, source.__name__, source.__doc__))
 
 src = int(input('Select source: '))
 
