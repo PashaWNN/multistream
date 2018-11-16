@@ -3,8 +3,8 @@ from imaging import Camera, Screen, NewScreen
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--group', default=1, help='Multicast group. By default it\'s 1', type=int)
-parser.add_argument('--source', default=-1, help='Specify source(by default you need to do it interactively)', type=int)
+parser.add_argument('-g', '--group', default=1, help='Multicast group. By default it\'s 1', type=int)
+parser.add_argument('-s', '--source', default=-1, help='Specify source(by default you need to do it interactively)', type=int)
 args = parser.parse_args()
 
 
