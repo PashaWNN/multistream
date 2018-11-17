@@ -32,8 +32,10 @@ class Screen(ImageSource):
     def read(self):
         with self.mss as sct:
             img = sct.grab(sct.monitors[0])
-        nparray = np.array(img.pixels)
-        _, buf = cv2.imencode('.jpg', nparray, (cv2.IMWRITE_JPEG_QUALITY, 50))
+        nparray = np.uint8(np.array(img.pixels))
+        img = cv2.cvtColor(nparray, cv2.COLOR_BGRA2RGB)
+        img = cv2.resize(img, (0, 0), fx=0.5, fy=0.5)
+        _, buf = cv2.imencode('.jpg', img, (cv2.IMWRITE_JPEG_QUALITY, 50))
         return buf
 
 

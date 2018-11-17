@@ -1,9 +1,15 @@
 from multicast import MulticastClient
 import cv2
 import numpy as np
+import argparse
 
 
-clt = MulticastClient()
+parser = argparse.ArgumentParser()
+parser.add_argument('-g', '--group', default=1, help='Multicast group. By default it\'s 1', type=int)
+args = parser.parse_args()
+
+
+clt = MulticastClient(args.group)
 
 
 while True:
